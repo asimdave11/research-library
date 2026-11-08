@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Library</title>
+<style>
+:root{
+  --bg:#f7f6f2;--panel:#ffffff;--ink:#1d1d1b;--muted:#6b6a64;--line:#e4e2da;
+  --accent:#2f5d50;--accent-soft:#e3ece8;--chip:#efede6;
+  --popgen:#6a4c93;--proteins:#1f6f8b;--immuno:#b5543c;--pp:#2f7d6d;--lab:#8a6d2c;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#151513;--panel:#1d1d1b;--ink:#ecebe6;--muted:#a09e96;--line:#2e2d29;
+  --accent:#8cc7b3;--accent-soft:#243631;--chip:#2a2926;
+}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:inherit}
+header{padding:48px 24px 20px;max-width:1100px;margin:0 auto}
+h1{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-weight:600;font-size:40px;letter-spacing:-.01em;margin:0 0 6px}
+.sub{color:var(--muted);margin:0}
+.stats{display:flex;gap:28px;margin-top:22px;flex-wrap:wrap}
+.stat b{display:block;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:13px}
+main{max-width:1100px;margin:0 auto;padding:0 24px 64px}
+.controls{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 12px;border-bottom:1px solid var(--line)}
+.search{width:100%;padding:12px 14px;font-size:16px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);outline:none}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 11px;border-radius:999px;font-size:13px;cursor:pointer;user-select:none;display:inline-flex;gap:6px;align-items:center}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip small{opacity:.65;font-variant-numeric:tabular-nums}
+select{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 8px;border-radius:8px;font-size:13px}
+.spacer{flex:1}
+.count{color:var(--muted);font-size:13px}
+.list{margin-top:8px}
+.yr{font-family:"Iowan Old Style",Georgia,serif;font-size:20px;color:var(--muted);margin:26px 0 6px;font-variant-numeric:tabular-nums}
+.paper{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:12px 14px;border-radius:10px;background:var(--panel);border:1px solid var(--line);margin-bottom:8px}
+.paper:hover{border-color:var(--accent)}
+.title{font-weight:600;text-decoration:none;line-height:1.35}
+.title:hover{text-decoration:underline;text-decoration-color:var(--accent)}
+.meta{color:var(--muted);font-size:13.5px;grid-column:1}
+.meta i{font-style:italic}
+.tags{grid-column:2;grid-row:1 / span 2;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.tag{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.tag.k-review{background:#f3e7c4;color:#7a5a07}.tag.k-preprint{background:#dfe9f6;color:#2b5687}.tag.k-book{background:#dff0e2;color:#2e6b3a}
+@media (prefers-color-scheme:dark){.tag.k-review{background:#3d331a;color:#e5c66d}.tag.k-preprint{background:#1d2b3d;color:#8fb4e3}.tag.k-book{background:#1e3322;color:#8fcf9b}}
+.why{grid-column:1;font-size:13px;color:var(--accent)}
+.empty{color:var(--muted);padding:40px 0;text-align:center}
+footer{max-width:1100px;margin:0 auto;padding:0 24px 40px;color:var(--muted);font-size:13px}
+@media (max-width:640px){h1{font-size:30px}.paper{grid-template-columns:1fr}.tags{grid-column:1;grid-row:auto;flex-direction:row;flex-wrap:wrap;align-items:flex-start}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Research Library</h1>
+  <p class="sub">Population genetics, protein biophysics and immunology · curated in JabRef, updated every week</p>
+  <div class="stats" id="stats"></div>
+</header>
+<main>
+  <div class="controls">
+    <input class="search" id="q" type="search" placeholder="Search titles, authors, journals…" autocomplete="off">
+    <div class="row" id="secs"></div>
+    <div class="row">
+      <span class="chip" data-kind="review">⭐ Reviews</span>
+      <span class="chip" data-kind="preprint">📘 Preprints</span>
+      <span class="chip" data-kind="book">📗 Books &amp; chapters</span>
+      <select id="sub" hidden></select>
+      <span class="spacer"></span>
+      <span class="count" id="count"></span>
+      <select id="sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="az">Title A–Z</option></select>
+    </div>
+  </div>
+  <div class="list" id="list"></div>
+</main>
+<footer id="foot"></footer>
+<script>
+const DATA=/*__DATA__*/null;
+const COLORS={'must-read-popgen':'var(--popgen)','must-read-proteins':'var(--proteins)','must-read-immunology':'var(--immuno)','popgen-protein':'var(--pp)'};
+const SHORT={'must-read-popgen':'Popgen','must-read-proteins':'Proteins','must-read-immunology':'Immunology','popgen-protein':'popgen-protein','brannigan-lab':'Brannigan Lab','schietinger-lab':'Schietinger Lab','pezzuto-lab':'Pezzuto Lab'};
+const state={q:'',sec:null,kinds:new Set(),sub:'',sort:'new'};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const secOf=r=>DATA.sections.filter(s=>r.groups.includes(s.group));
+const inboxN=DATA.inbox.length?DATA.inbox[0].n:0;
+$('#stats').innerHTML=[[DATA.records.length,'papers'],[DATA.sections.length,'sections'],[DATA.records.filter(r=>r.kind==='review').length,'reviews'],[DATA.updated,'last updated']].map(([b,s])=>`<div class="stat"><b>${esc(b)}</b><span>${s}</span></div>`).join('');
+function renderSecs(){
+  const all=`<span class="chip ${state.sec?'':'on'}" data-sec="">All <small>${DATA.records.length}</small></span>`;
+  $('#secs').innerHTML=all+DATA.sections.map(s=>`<span class="chip ${state.sec===s.slug?'on':''}" data-sec="${s.slug}">${COLORS[s.slug]?`<span class="dot" style="background:${COLORS[s.slug]}"></span>`:''}${esc(SHORT[s.slug]||s.title)} <small>${s.n}</small></span>`).join('');
+  const sec=DATA.sections.find(s=>s.slug===state.sec), sel=$('#sub');
+  if(sec&&sec.subs.length){sel.hidden=false;sel.innerHTML='<option value="">All subsections</option>'+sec.subs.map((g,i)=>`<option value="${esc(g)}" ${state.sub===g?'selected':''}>${esc(sec.subLabels[i])}</option>`).join('');}
+  else{sel.hidden=true;state.sub='';}
+}
+function render(){
+  const q=state.q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const sec=DATA.sections.find(s=>s.slug===state.sec);
+  let rs=DATA.records.filter(r=>{
+    if(sec&&!r.groups.includes(sec.group))return false;
+    if(state.sub&&!r.groups.includes(state.sub))return false;
+    if(state.kinds.size&&!state.kinds.has(r.kind))return false;
+    if(q.length){const hay=(r.title+' '+r.authors.join(' ')+' '+r.venue+' '+r.year).toLowerCase();return q.every(t=>hay.includes(t));}
+    return true;});
+  const yn=r=>parseInt(r.year)||0;
+  rs.sort(state.sort==='az'?(a,b)=>a.title.localeCompare(b.title):state.sort==='old'?(a,b)=>yn(a)-yn(b)||a.title.localeCompare(b.title):(a,b)=>yn(b)-yn(a)||a.title.localeCompare(b.title));
+  $('#count').textContent=`${rs.length} paper${rs.length===1?'':'s'}`;
+  if(!rs.length){$('#list').innerHTML='<div class="empty">No papers match.</div>';return;}
+  let out='',last=null;
+  for(const r of rs){
+    if(state.sort!=='az'&&r.year!==last){out+=`<div class="yr">${esc(r.year||'Undated')}</div>`;last=r.year;}
+    const tags=secOf(r).map(s=>`<span class="tag">${esc(SHORT[s.slug]||s.title)}</span>`).join('')+(r.kind!=='article'?`<span class="tag k-${r.kind}">${{review:'⭐ Review',preprint:'📘 Preprint',book:'📗 Book/chapter'}[r.kind]}</span>`:'');
+    const t=r.url?`<a class="title" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:`<span class="title">${esc(r.title)}</span>`;
+    out+=`<div class="paper">${t}<div class="tags">${tags}</div><div class="meta">${esc(r.short)}${r.venue?` · <i>${esc(r.venue)}</i>`:''}</div>${r.why?`<div class="why">${esc(r.why)}</div>`:''}</div>`;
+  }
+  $('#list').innerHTML=out;
+}
+$('#q').addEventListener('input',e=>{state.q=e.target.value;render();});
+$('#secs').addEventListener('click',e=>{const c=e.target.closest('[data-sec]');if(!c)return;state.sec=c.dataset.sec||null;state.sub='';renderSecs();render();});
+document.querySelectorAll('[data-kind]').forEach(c=>c.addEventListener('click',()=>{const k=c.dataset.kind;state.kinds.has(k)?state.kinds.delete(k):state.kinds.add(k);c.classList.toggle('on');render();}));
+$('#sub').addEventListener('change',e=>{state.sub=e.target.value;render();});
+$('#sort').addEventListener('change',e=>{state.sort=e.target.value;render();});
+$('#foot').innerHTML=`Titles link to the paper (DOI or PubMed). BibTeX for everything here: <a href="library.bib">library.bib</a>.`+(inboxN?` · ${inboxN} papers added in the latest update.`:'');
+renderSecs();render();
+</script>
+</body>
+</html>

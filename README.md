@@ -2,7 +2,7 @@
 
 A curated reading list in population genetics, protein biophysics and immunology, kept in [JabRef](https://www.jabref.org/) and updated automatically every week.
 
-**481 papers** · last updated 2026-11-08 · **[Open the searchable library →](index.html)** (live at the GitHub Pages address once Pages is on)
+**481 papers** · last updated 2026-11-08 · **[Open the searchable library →](https://asimdave11.github.io/research-library/)**
 
 ## Sections
 

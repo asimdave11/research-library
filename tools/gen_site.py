@@ -166,7 +166,7 @@ readme = [
     "",
     "A curated reading list in population genetics, protein biophysics and immunology, kept in [JabRef](https://www.jabref.org/) and updated automatically every week.",
     "",
-    f"**{total} papers** · last updated {today} · **[Open the searchable library →](index.html)** (live at the GitHub Pages address once Pages is on)",
+    f"**{total} papers** · last updated {today} · **[Open the searchable library →](https://asimdave11.github.io/research-library/)**",
     "",
     "## Sections",
     "",

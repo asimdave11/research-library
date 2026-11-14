@@ -4,4 +4,4 @@ New papers added by the weekly and monthly updates, newest first.
 
 [← Back to library](../README.md)
 
-_No inbox runs yet. The first weekly update is scheduled for Saturday morning._
+- [Inbox 2026-11-14](inbox-2026-11-14.md) · 22 papers

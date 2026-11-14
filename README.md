@@ -2,7 +2,7 @@
 
 A curated reading list in population genetics, protein biophysics and immunology, kept in [JabRef](https://www.jabref.org/) and updated automatically every week.
 
-**481 papers** · last updated 2026-11-08 · **[Open the searchable library →](https://asimdave11.github.io/research-library/)**
+**503 papers** · last updated 2026-11-14 · **[Open the searchable library →](https://asimdave11.github.io/research-library/)**
 
 ## Sections
 
@@ -18,7 +18,7 @@ A curated reading list in population genetics, protein biophysics and immunology
 
 ## New this week
 
-The first weekly update runs Saturday morning. New papers will appear in [inbox](inbox/README.md).
+[Inbox 2026-11-14](inbox/inbox-2026-11-14.md): 22 new papers. [All inbox runs](inbox/README.md)
 
 ## Files
 
